@@ -1,17 +1,22 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_expense_app/models/transaction.dart';
 import 'package:intl/intl.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> _userTransaction;
+  final Function deleteTx;
 
-  TransactionList(this._userTransaction);
+  TransactionList(
+    this._userTransaction,
+    this.deleteTx,
+  );
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.all(8),
-      height: 350,
+      height: 500,
       child: _userTransaction.isEmpty
           ? Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -36,54 +41,28 @@ class TransactionList extends StatelessWidget {
               itemCount: _userTransaction.length,
               itemBuilder: (context, index) {
                 return Card(
-                  elevation: 4,
-                  margin: EdgeInsets.all(8),
-                  child: Row(
-                    children: [
-                      Container(
-                        child: Text(
-                          '\$${_userTransaction[index].amount.toStringAsFixed(2)}',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                            color: Theme.of(context).primaryColor,
-                          ),
+                  elevation: 5,
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: FittedBox(
+                          child: Text('\$${_userTransaction[index].amount}'),
                         ),
-                        margin: EdgeInsets.symmetric(
-                          vertical: 10,
-                          horizontal: 15,
-                        ),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Theme.of(context).primaryColor,
-                            width: 1.0,
-                          ),
-                        ),
-                        padding:
-                            EdgeInsets.symmetric(vertical: 2, horizontal: 4),
-                        width: 80,
-                        alignment: Alignment.center,
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: 200,
-                            child: Text(_userTransaction[index].title,
-                                style: Theme.of(context).textTheme.title),
-                          ),
-                          Text(
-                            DateFormat.yMMMEd()
-                                .format(_userTransaction[index].date),
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 11,
-                            ),
-                            textAlign: TextAlign.left,
-                          ),
-                        ],
-                      )
-                    ],
+                      radius: 30,
+                    ),
+                    title: Text(
+                      _userTransaction[index].title,
+                      style: Theme.of(context).textTheme.title,
+                    ),
+                    trailing: IconButton(
+                      onPressed: () => deleteTx( _userTransaction[index].id),
+                      color: Theme.of(context).errorColor,
+                      icon: Icon(Icons.delete),
+                    ),
+                    subtitle: Text(DateFormat.yMMMEd()
+                        .format(_userTransaction[index].date)),
                   ),
                 );
               },

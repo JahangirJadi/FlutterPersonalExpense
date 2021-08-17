@@ -15,21 +15,19 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-          textTheme: ThemeData
-              .light()
-              .textTheme
-              .copyWith(
+          textTheme: ThemeData.light().textTheme.copyWith(
               title: TextStyle(
                   fontFamily: 'OpenSans',
                   fontSize: 18.0,
-                  fontWeight: FontWeight.bold)),
+                  fontWeight: FontWeight.bold),
+              button: TextStyle(
+                color: Colors.white,
+              )),
           appBarTheme: AppBarTheme(
-              textTheme: ThemeData
-                  .light()
-                  .textTheme
-                  .copyWith(
+              textTheme: ThemeData.light().textTheme.copyWith(
                   title: TextStyle(fontFamily: 'OpenSans', fontSize: 20.0))),
           primarySwatch: Colors.purple,
+          errorColor: Colors.red,
           accentColor: Colors.amber,
           fontFamily: 'QuickSand'),
       title: 'Personal Expenses',
@@ -45,60 +43,60 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _userTransaction = [
-    // Transaction(
-    //   id: 't1',
-    //   title: 'Monthly business committee',
-    //   amount: 50.00,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: 't1',
-    //   title: 'Tuition Fees',
-    //   amount: 85.00,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: 't1',
-    //   title: 'University Fees',
-    //   amount: 250.00,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: 't1',
-    //   title: 'Breakfast',
-    //   amount: 39.49,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: 't1',
-    //   title: 'Lunch with friends',
-    //   amount: 45.50,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: 't1',
-    //   title: 'Dinner with family',
-    //   amount: 55.00,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: 't1',
-    //   title: 'Shopping',
-    //   amount: 72.35,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: 't1',
-    //   title: 'New Shoes',
-    //   amount: 69.99,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: 't2',
-    //   title: 'Weekly Groceries',
-    //   amount: 50.5,
-    //   date: DateTime.now(),
-    // ),
+    Transaction(
+      id: 't1',
+      title: 'Monthly business committee',
+      amount: 50.00,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: 't2',
+      title: 'Tuition Fees',
+      amount: 85.00,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: 't3',
+      title: 'University Fees',
+      amount: 250.00,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: 't4',
+      title: 'Breakfast',
+      amount: 39.49,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: 't5',
+      title: 'Lunch with friends',
+      amount: 45.50,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: 't6',
+      title: 'Dinner with family',
+      amount: 55.00,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: 't7',
+      title: 'Shopping',
+      amount: 72.35,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: 't8',
+      title: 'New Shoes',
+      amount: 69.99,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: 't9',
+      title: 'Weekly Groceries',
+      amount: 50.5,
+      date: DateTime.now(),
+    ),
   ];
 
   List<Transaction> trans = [];
@@ -113,12 +111,18 @@ class _MyHomePageState extends State<MyHomePage> {
     }).toList();
   }
 
-  void _addNewTransaction(String title, double amount) {
+  void _deleteUserTransaction(String tId) {
+setState(() {
+  _userTransaction.removeWhere((element) => element.id==tId);
+});
+  }
+
+  void _addNewTransaction(String title, double amount, DateTime selectedDate) {
     final newTx = Transaction(
       id: DateTime.now().toString(),
       title: title,
       amount: amount,
-      date: DateTime.now(),
+      date: selectedDate,
     );
 
     setState(() {
@@ -159,7 +163,7 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             children: [
               Chart(_recentTransaction),
-              TransactionList(_userTransaction),
+              TransactionList(_userTransaction,_deleteUserTransaction),
             ],
           ),
         ));
