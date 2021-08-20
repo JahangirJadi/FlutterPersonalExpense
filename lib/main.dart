@@ -112,9 +112,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _deleteUserTransaction(String tId) {
-setState(() {
-  _userTransaction.removeWhere((element) => element.id==tId);
-});
+    setState(() {
+      _userTransaction.removeWhere((element) => element.id == tId);
+    });
   }
 
   void _addNewTransaction(String title, double amount, DateTime selectedDate) {
@@ -141,6 +141,18 @@ setState(() {
 
   @override
   Widget build(BuildContext context) {
+    final appBar = AppBar(
+      actions: [
+        IconButton(
+            onPressed: () {
+              _showTransactionModal(context);
+            },
+            icon: Icon(Icons.add))
+      ],
+      title: Text("Personal Expenses"),
+      elevation: 0,
+    );
+
     return Scaffold(
         floatingActionButton: FloatingActionButton(
           onPressed: () {
@@ -148,22 +160,25 @@ setState(() {
           },
           child: Icon(Icons.add),
         ),
-        appBar: AppBar(
-          actions: [
-            IconButton(
-                onPressed: () {
-                  _showTransactionModal(context);
-                },
-                icon: Icon(Icons.add))
-          ],
-          title: Text("Personal Expenses"),
-          elevation: 0,
-        ),
+        appBar: appBar,
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Chart(_recentTransaction),
-              TransactionList(_userTransaction,_deleteUserTransaction),
+              Container(
+                child: Chart(_recentTransaction),
+                height: (MediaQuery.of(context).size.height -
+                        appBar.preferredSize.height -
+                        MediaQuery.of(context).padding.top) *
+                    0.25,
+              ),
+              Container(
+                child:
+                    TransactionList(_userTransaction, _deleteUserTransaction),
+                height: (MediaQuery.of(context).size.height -
+                        appBar.preferredSize.height -
+                        MediaQuery.of(context).padding.top) *
+                    0.75,
+              ),
             ],
           ),
         ));
