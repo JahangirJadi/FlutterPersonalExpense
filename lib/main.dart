@@ -99,6 +99,8 @@ class _MyHomePageState extends State<MyHomePage> {
     ),
   ];
 
+  bool _switchChart = false;
+
   List<Transaction> trans = [];
 
   List<Transaction> get _recentTransaction {
@@ -141,6 +143,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+
+    final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+
     final appBar = AppBar(
       actions: [
         IconButton(
@@ -151,6 +156,15 @@ class _MyHomePageState extends State<MyHomePage> {
       ],
       title: Text("Personal Expenses"),
       elevation: 0,
+    );
+
+    final txListWidget = Container(
+      child: TransactionList(
+          _userTransaction, _deleteUserTransaction),
+      height: (MediaQuery.of(context).size.height -
+          appBar.preferredSize.height -
+          MediaQuery.of(context).padding.top) *
+          0.7,
     );
 
     return Scaffold(
@@ -164,21 +178,35 @@ class _MyHomePageState extends State<MyHomePage> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Container(
-                child: Chart(_recentTransaction),
-                height: (MediaQuery.of(context).size.height -
-                        appBar.preferredSize.height -
-                        MediaQuery.of(context).padding.top) *
-                    0.25,
+            if(isLandscape)  Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Show Chart'),
+                  Switch(
+                      value: _switchChart,
+                      onChanged: (val) {
+                        setState(() {
+                          _switchChart = val;
+                        });
+                      }),
+                ],
               ),
-              Container(
-                child:
-                    TransactionList(_userTransaction, _deleteUserTransaction),
-                height: (MediaQuery.of(context).size.height -
-                        appBar.preferredSize.height -
-                        MediaQuery.of(context).padding.top) *
-                    0.75,
-              ),
+           if(!isLandscape) Container(
+             child: Chart(_recentTransaction),
+             height: (MediaQuery.of(context).size.height -
+                 appBar.preferredSize.height -
+                 MediaQuery.of(context).padding.top) *
+                 0.3,
+           ),
+              if(!isLandscape) txListWidget,
+              if(isLandscape) _switchChart ? Container(
+                      child: Chart(_recentTransaction),
+                      height: (MediaQuery.of(context).size.height -
+                              appBar.preferredSize.height -
+                              MediaQuery.of(context).padding.top) *
+                          0.7,
+                    )
+                  : txListWidget
             ],
           ),
         ));

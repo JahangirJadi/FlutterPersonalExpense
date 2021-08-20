@@ -17,7 +17,8 @@ class TransactionList extends StatelessWidget {
     return Container(
       margin: EdgeInsets.all(8),
       child: _userTransaction.isEmpty
-          ? Column(
+          ? LayoutBuilder(builder: (ctx,constraints){
+            return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
@@ -32,10 +33,11 @@ class TransactionList extends StatelessWidget {
                     'assets/images/waiting.png',
                     fit: BoxFit.cover,
                   ),
-                  height: 200,
+                  height: constraints.maxHeight * 0.6,
                 )
               ],
-            )
+            );
+      })
           : ListView.builder(
               itemCount: _userTransaction.length,
               itemBuilder: (context, index) {
